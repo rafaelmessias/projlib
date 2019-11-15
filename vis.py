@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def scatter(proj, labels, fig_size=None):
+def scatter(proj, labels=None, fig_size=None):
     if type(proj) == np.ndarray and proj.shape[1] == 2:
         fig, _ = plt.subplots()
         if fig_size:
