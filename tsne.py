@@ -61,4 +61,7 @@ class TSNE(param.Parameterized):
         if self.variant == "fitsne":
             return FItSNE(X.values, perplexity=self.perplexity)
 
+        if self.variant == "cuda":
+            return CudaTSNE(perplexity=self.perplexity).fit_transform(X)
+
         return None
