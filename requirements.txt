@@ -1,4 +1,5 @@
 # TODO this file is incomplete.
+matplotlib
 numpy
 param
 bhtsne
