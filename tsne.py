@@ -1,22 +1,49 @@
 import param
 
-# TODO why does it not work with just import bhtsne...?
-# TODO must check if the modules are installed before/while importing
-from bhtsne import bhtsne
-from MulticoreTSNE import MulticoreTSNE
-from sklearn.manifold import TSNE as skTSNE
-from OptSNE import OptSNE
-from fitsne import FItSNE
+VARIANTS = []
+
+try:
+    # TODO why does it not work with just import bhtsne...?
+    from bhtsne import bhtsne
+    VARIANTS.append("bhtsne")
+except:
+    pass
+
+try:
+    from MulticoreTSNE import MulticoreTSNE
+    VARIANTS.append("multicore")
+except:
+    pass
+
+try:
+    from sklearn.manifold import TSNE as skTSNE
+    VARIANTS.append("sklearn")
+except:
+    pass
+
+try:
+    from OptSNE import OptSNE
+    VARIANTS.append("optsne")
+except:
+    pass
+
+try:
+    from fitsne import FItSNE
+    VARIANTS.append("fitsne")
+except:
+    pass
+
+try:
+    from tsnecuda import TSNE as CudaTSNE
+    VARIANTS.append("cuda")
+except:
+    pass
 
 class TSNE(param.Parameterized):
     perplexity = param.Number(50, bounds=(5, 75))
     early_exaggeration = param.Number(25, bounds=(5, 50))
     learning_rate = param.Number(200, bounds=(50, 400))
-    # TODO verify if each import was successful before creating the list
-    variant = param.ObjectSelector("bhtsne", 
-        objects=[
-            "bhtsne", "multicore", "sklearn", "optsne", "fitsne"
-        ])
+    variant = param.ObjectSelector(VARIANTS[0], objects=VARIANTS)
 
     def fit_transform(self, X):
         if self.variant == "bhtsne":            
