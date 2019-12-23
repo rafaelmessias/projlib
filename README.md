@@ -19,11 +19,12 @@ The `requirements.txt` file will handle most of the dependencies, but some of th
 You can install everything else with:
 
 ```
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
-Finally, make sure the `dr` library is in the path to be imported.
+Finally, make sure the `dr-tools` library is in the path to be imported.
 
 ```
-export PYTHONPATH=$(dirname $(pwd))
+cd dr-tools
+export PYTHONPATH=$PYTHONPATH:$(dirname $(pwd))
 ```

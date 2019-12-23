@@ -1,7 +1,7 @@
 # TODO this file is incomplete.
+scipy
 matplotlib
 param
 bhtsne
 fitsne
 https://github.com/rafaelmessias/Multicore-opt-SNE/archive/master.zip
-tsnecuda
