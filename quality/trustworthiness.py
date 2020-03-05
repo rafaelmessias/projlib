@@ -27,6 +27,10 @@ def trustworthiness(D_high, D_low, k=7):
     return float((1 - (2 / (n * k * (2 * n - 3 * k - 1)) * sum_i)).squeeze())
 
 
+# TODO  Make importing a bit easier; right now it's:
+#           "from projlib.quality.trustworthiness import Trustworthiness",
+#       which is a bit too long (and duplicated).
+
 class Trustworthiness(DistanceBasedMetric):
 
     def partial(self, D_h, D_l, k):        
