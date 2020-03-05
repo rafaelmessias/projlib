@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
-from metric import ChunkedMetric
+from projlib.quality.metric import ChunkedMetric
 
 def neighborhood_hit(X, y, k):
     knn = KNeighborsClassifier(n_neighbors=k)

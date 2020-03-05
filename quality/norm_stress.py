@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.spatial.distance import cdist
-from metric import DistanceBasedMetric
+from projlib.quality.metric import DistanceBasedMetric
 
 
 # FIXME: returning unbounded values. Check definitions on "Modern Multidimensional Scaling: Theory and Applications"

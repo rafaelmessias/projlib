@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.spatial.distance import cdist
-from metric import DistanceBasedMetric
+from projlib.quality.metric import DistanceBasedMetric
 
 
 def continuity(D_high, D_low, k=7):
