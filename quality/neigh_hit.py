@@ -13,11 +13,6 @@ def neighborhood_hit(X, y, k):
 
 class NeighborhoodHit(ChunkedMetric):
 
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
-        self.n = X.shape[0]
-
     def partial(self, X, **kwargs):
         # I need the entire y for this operation
         neighbors = self.y[self.knn.kneighbors(X, return_distance=False)]
@@ -28,17 +23,23 @@ class NeighborhoodHit(ChunkedMetric):
 
     # NOTE the returning value of get_chunk currently must be a tuple
     def get_chunk(self, start, chunk_size):
-        return (self.X[start:start+chunk_size], )
+        return (self.P[start:start+chunk_size], )
 
     def aggregate(self, partial_results, k):
-        n = self.X.shape[0]
+        n = self.P.shape[0]
         return np.sum(partial_results) / (n * k)
 
-    def compute(self, chunk_size=None, chunk_search=True, k=7):
-        self.knn = KNeighborsClassifier(n_neighbors=k)
-        self.knn.fit(self.X, self.y)
+    def dataset_size(self):
+        return self.P.shape[0]
 
-        return super().compute(chunk_size=chunk_size, chunk_search=chunk_search, k=k)
+    def compute(self, P, y, k=7, **kwargs):
+        self.P = P
+        self.y = y
+
+        self.knn = KNeighborsClassifier(n_neighbors=k)
+        self.knn.fit(self.P, self.y)
+
+        return super().compute(k=k, **kwargs)
 
 
 if __name__ == "__main__":
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     P, y = np.random.rand(n, 2), np.random.randint(3, size=n)
 
     t0 = perf_counter()
-    nh_chunks = NeighborhoodHit(P, y).compute(k=7, chunk_size=50)
+    nh_chunks = NeighborhoodHit().compute(P, y, k=7, chunk_size=50)
     print(f"nh_chunks = {nh_chunks}, time = {perf_counter() - t0}")    
     
     t0 = perf_counter()

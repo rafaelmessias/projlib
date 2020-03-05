@@ -28,6 +28,7 @@ def continuity(D_high, D_low, k=7):
 
 
 class Continuity(DistanceBasedMetric):
+    
     def partial(self, D_high, D_low, k):
         n = D_high.shape[0]
 
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     X, P = np.random.rand(n, 100), np.random.rand(n, 2)
 
     t0 = perf_counter()
-    co_chunks = Continuity(X, P).compute(k=20)
+    co_chunks = Continuity().compute(X, P, k=20)
     print(f"co_chunks = {co_chunks}, time = {perf_counter() - t0}")
 
     from scipy.spatial.distance import squareform, pdist

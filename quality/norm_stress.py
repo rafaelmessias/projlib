@@ -25,7 +25,7 @@ if __name__ == "__main__":
     X, P = np.random.rand(n, 100), np.random.rand(n, 2)
 
     t0 = perf_counter()
-    ns_chunks = NormalizedStress(X, P).compute()
+    ns_chunks = NormalizedStress().compute(X, P)
     print(f"ns_chunks = {ns_chunks}, time = {perf_counter() - t0}")
         
     from scipy.spatial.distance import squareform, pdist    

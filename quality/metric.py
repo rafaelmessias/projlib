@@ -15,18 +15,22 @@ class ChunkedMetric:
 
     def get_chunk(self, start, chunk_size):
         raise NotImplementedError("Must override 'get_chunk'")
+
+    def dataset_size(self):
+        raise NotImplementedError("Must override 'dataset_size'")
     
     def compute(self, chunk_size=None, chunk_search=True, **kwargs):
+        n = self.dataset_size()
         partial_results = []
 
         if chunk_search:
             if not chunk_size:
-                chunk_size = (self.n + 1) // 2
+                chunk_size = (n + 1) // 2
             
             i = 0
-            low, hi = 1, self.n
-            while i < self.n:
-                print(f"Chunk start: {i} (of {self.n}), size: {chunk_size} ({low}, {hi})")
+            low, hi = 1, n
+            while i < n:
+                print(f"Chunk start: {i} (of {n}), size: {chunk_size} ({low}, {hi})")
                 try:
                     chunk = self.get_chunk(i, chunk_size)
                     partial_results.append(self.partial(*chunk, **kwargs))
@@ -49,9 +53,9 @@ class ChunkedMetric:
                 
         else:
             if not chunk_size:
-                chunk_size = self.n
+                chunk_size = n
             
-            for i in range(0, self.n, chunk_size):
+            for i in range(0, n, chunk_size):
                 chunk = self.get_chunk(i, chunk_size)
                 partial_results.append(self.partial(*chunk, **kwargs))
                 # Break if you want to debug memory usage of each chunk
@@ -62,14 +66,17 @@ class ChunkedMetric:
 
 class DistanceBasedMetric(ChunkedMetric):
 
-    def __init__(self, X, P):
-        self.X = X
-        self.P = P
-        self.n = X.shape[0]
-
     # TODO implement a cache here for the cases when the current chunk is shrinked
     def get_chunk(self, start, chunk_size):
         D_h = cdist(self.X[start:start+chunk_size], self.X)
         D_l = cdist(self.P[start:start+chunk_size], self.P)
         return D_h, D_l
 
+    def dataset_size(self):
+        return self.X.shape[0]
+
+    # TODO add an option to pass the distance matrix as input instead
+    def compute(self, X, P, **kwargs):
+        self.X = X
+        self.P = P        
+        return super().compute(**kwargs)

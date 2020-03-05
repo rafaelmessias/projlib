@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import cdist
-from metric import DistanceBasedMetric
+from projlib.quality.metric import DistanceBasedMetric
+
 
 def trustworthiness(D_high, D_low, k=7):
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     X, P = np.random.rand(n, 10), np.random.rand(n, 2)
 
     t0 = perf_counter()
-    tw_chunks = Trustworthiness(X, P).compute(k=20)
+    tw_chunks = Trustworthiness().compute(X, P, k=20)
     print(f"tw_chunks = {tw_chunks}, time = {perf_counter() - t0}")
     
     t0 = perf_counter()    
