@@ -22,9 +22,9 @@ You can install everything else with:
 pip install -r requirements.txt
 ```
 
-Finally, make sure the `dr-tools` library is in the path to be imported.
+Finally, make sure that `projlib` is in the path to be imported by python.
 
 ```
-cd dr-tools
+cd projlib
 export PYTHONPATH=$PYTHONPATH:$(dirname $(pwd))
 ```
