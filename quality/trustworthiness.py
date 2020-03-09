@@ -59,8 +59,6 @@ class Trustworthiness(DistanceBasedMetric):
         n = self.X.shape[0]
         total = sum(partial_results)
         return float((1 - (2 / (n * k * (2 * n - 3 * k - 1)) * total)).squeeze())
-    
-    
 
 
 if __name__ == "__main__":
@@ -68,12 +66,18 @@ if __name__ == "__main__":
     from time import perf_counter
     from scipy.spatial.distance import squareform, pdist
     
-    n = random.randint(1000, 5000)
-    X, P = np.random.rand(n, 10), np.random.rand(n, 2)
+    n = 5000
+    X, P = np.random.rand(n, 100), np.random.rand(n, 2)
+
+    t0 = perf_counter()
+    tw_chunks_jobs = Trustworthiness().compute(X, P, k=20, chunk_size=10, chunk_search=False, n_jobs=-1)
+    print(f"tw_chunks_jobs = {tw_chunks_jobs}, time = {perf_counter() - t0}")
 
     t0 = perf_counter()
     tw_chunks = Trustworthiness().compute(X, P, k=20)
     print(f"tw_chunks = {tw_chunks}, time = {perf_counter() - t0}")
+
+    print("Same?", "Yes" if np.isclose(tw_chunks_jobs, tw_chunks) else "No")
     
     t0 = perf_counter()    
     D_h, D_l = squareform(pdist(X)), squareform(pdist(P))

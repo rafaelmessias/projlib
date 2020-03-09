@@ -61,12 +61,18 @@ if __name__ == "__main__":
     import random
     from time import perf_counter
     
-    n = random.randint(500, 1000)
+    n = 5000
     X, P = np.random.rand(n, 100), np.random.rand(n, 2)
+
+    t0 = perf_counter()
+    co_chunks_jobs = Continuity().compute(X, P, k=20, chunk_size=10, chunk_search=False, n_jobs=-1)
+    print(f"co_chunks_jobs = {co_chunks_jobs}, time = {perf_counter() - t0}")
 
     t0 = perf_counter()
     co_chunks = Continuity().compute(X, P, k=20)
     print(f"co_chunks = {co_chunks}, time = {perf_counter() - t0}")
+
+    print("Same?", "Yes" if co_chunks_jobs == co_chunks else "No")
 
     from scipy.spatial.distance import squareform, pdist
     t0 = perf_counter()

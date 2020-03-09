@@ -46,12 +46,18 @@ if __name__ == "__main__":
     import random
     from time import perf_counter
     
-    n = random.randint(500, 1000)
+    n = 10000
     P, y = np.random.rand(n, 2), np.random.randint(3, size=n)
 
     t0 = perf_counter()
-    nh_chunks = NeighborhoodHit().compute(P, y, k=7, chunk_size=50)
-    print(f"nh_chunks = {nh_chunks}, time = {perf_counter() - t0}")    
+    nh_chunks_jobs = NeighborhoodHit().compute(P, y, k=7, chunk_size=10, chunk_search=False, n_jobs=-1)
+    print(f"nh_chunks_jobs = {nh_chunks_jobs}, time = {perf_counter() - t0}")
+
+    t0 = perf_counter()
+    nh_chunks = NeighborhoodHit().compute(P, y, k=7)
+    print(f"nh_chunks = {nh_chunks}, time = {perf_counter() - t0}")
+
+    print("Same?", "Yes" if np.isclose(nh_chunks_jobs, nh_chunks) else "No")
     
     t0 = perf_counter()
     nh_full = neighborhood_hit(P, y, k=7)
