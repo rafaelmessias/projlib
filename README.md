@@ -33,5 +33,5 @@ export PYTHONPATH=$PYTHONPATH:$(dirname $(pwd))
 
 The main features that are currently available are listed below. Click on any of them to see the respective README and learn more about how to use them. Keep in mind that this library is very much a work in progress and will change/grow a lot in the near future!
 
-* [Quality measures](quality/README.md)
-* [Input/Output formats](io/README.md)
+* [Quality measures](quality/)
+* [Input/Output formats](io/)
