@@ -3,8 +3,7 @@ import param
 VARIANTS = []
 
 try:
-    # TODO why does it not work with just import bhtsne...?
-    from bhtsne import bhtsne
+    import bhtsne
     VARIANTS.append("bhtsne")
 except:
     pass
@@ -47,7 +46,7 @@ class TSNE(param.Parameterized):
 
     def fit_transform(self, X):
         if self.variant == "bhtsne":            
-            return bhtsne.run_bh_tsne(X, perplexity=self.perplexity, initial_dims=X.shape[1])
+            return bhtsne.tsne(X, perplexity=self.perplexity)
         
         if self.variant == "multicore":
             return MulticoreTSNE(n_jobs=4, perplexity=self.perplexity).fit_transform(X)
@@ -59,7 +58,7 @@ class TSNE(param.Parameterized):
             return OptSNE(perplexity=self.perplexity).fit_transform(X)
 
         if self.variant == "fitsne":
-            return FItSNE(X.values, perplexity=self.perplexity)
+            return FItSNE(X, perplexity=self.perplexity)
 
         if self.variant == "cuda":
             return CudaTSNE(perplexity=self.perplexity).fit_transform(X)
