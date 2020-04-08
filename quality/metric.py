@@ -1,9 +1,17 @@
 import numpy as np
 from scipy.spatial.distance import cdist
+from joblib import Parallel, delayed
 
 
 # TODO right now the abstract class assumes that I want to compute chunked distances; should be more general.
 # TODO at some point I must stop trying new chunk sizes and just stick with what is working.
+# TODO multiple jobs only work without chunk search, for now 
+
+def _run_chunk(self, i, chunk_size, **kwargs):
+    # print(f"_run_chunk: {i}, size: {chunk_size}")
+    chunk = self.get_chunk(i, chunk_size)
+    return self.partial(*chunk, **kwargs)
+
 
 class ChunkedMetric:
 
@@ -19,7 +27,7 @@ class ChunkedMetric:
     def dataset_size(self):
         raise NotImplementedError("Must override 'dataset_size'")
     
-    def compute(self, chunk_size=None, chunk_search=True, **kwargs):
+    def compute(self, chunk_size=None, chunk_search=True, n_jobs=1, **kwargs):
         n = self.dataset_size()
         partial_results = []
 
@@ -32,8 +40,7 @@ class ChunkedMetric:
             while i < n:
                 print(f"Chunk start: {i} (of {n}), size: {chunk_size} ({low}, {hi})")
                 try:
-                    chunk = self.get_chunk(i, chunk_size)
-                    partial_results.append(self.partial(*chunk, **kwargs))
+                    partial_results.append(_run_chunk(self, i, chunk_size, **kwargs))
                     # Break if you want to debug memory usage of each chunk
                     # break
                     # Success; move on with the next chunk
@@ -54,12 +61,9 @@ class ChunkedMetric:
         else:
             if not chunk_size:
                 chunk_size = n
-            
-            for i in range(0, n, chunk_size):
-                chunk = self.get_chunk(i, chunk_size)
-                partial_results.append(self.partial(*chunk, **kwargs))
-                # Break if you want to debug memory usage of each chunk
-                # break
+
+            p = Parallel(n_jobs=n_jobs)
+            partial_results = p((delayed(_run_chunk))(self, i, chunk_size, **kwargs) for i in range(0, n, chunk_size))
         
         return self.aggregate(partial_results, **kwargs)
 

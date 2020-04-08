@@ -2,6 +2,7 @@
 scipy
 matplotlib
 param
+joblib
 bhtsne
 fitsne
 https://github.com/rafaelmessias/Multicore-opt-SNE/archive/master.zip

@@ -21,18 +21,25 @@ if __name__ == "__main__":
     import random
     from time import perf_counter
     
-    n = random.randint(500, 1000)
+    n = 10000
     X, P = np.random.rand(n, 100), np.random.rand(n, 2)
+
+    t0 = perf_counter()
+    ns_chunks_jobs = NormalizedStress().compute(X, P, chunk_search=False, chunk_size=10, n_jobs=-1)
+    print(f"ns_chunks_jobs = {ns_chunks_jobs}, time = {perf_counter() - t0}")
 
     t0 = perf_counter()
     ns_chunks = NormalizedStress().compute(X, P)
     print(f"ns_chunks = {ns_chunks}, time = {perf_counter() - t0}")
+
+    # Equal up to 8 decimals
+    print("Same?", "Yes" if np.isclose(ns_chunks_jobs, ns_chunks) else "No")
         
-    from scipy.spatial.distance import squareform, pdist    
+    from scipy.spatial.distance import squareform, pdist
     t0 = perf_counter()
     D_h, D_l = squareform(pdist(X)), squareform(pdist(P))    
     ns_full = normalized_stress(D_h, D_l)
     print(f"ns_full = {ns_full}, time = {perf_counter() - t0}")
 
     # Equal up to 8 decimals
-    print("Same?", "Yes" if np.isclose(ns_chunks, ns_full) else "No") 
+    print("Same?", "Yes" if np.isclose(ns_chunks, ns_full) else "No")
