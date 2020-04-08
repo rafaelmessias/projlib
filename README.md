@@ -1,4 +1,4 @@
-### Installation
+## Installation
 
 The `numpy` and `cython` modules must be manually installed before the rest of the dependencies.
 
@@ -28,3 +28,10 @@ Finally, make sure that `projlib` is in the path to be imported by python.
 cd projlib
 export PYTHONPATH=$PYTHONPATH:$(dirname $(pwd))
 ```
+
+## Usage
+
+The main features that are currently available are listed below. Click on any of them to see the respective README and learn more about how to use them. Keep in mind that this library is very much a work in progress and will change/grow a lot in the near future!
+
+* [Quality measures](quality/README.md)
+* [Input/Output formats](io/README.md)
