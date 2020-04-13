@@ -39,9 +39,9 @@ except:
     pass
 
 class TSNE(param.Parameterized):
-    perplexity = param.Number(50, bounds=(5, 75))
-    early_exaggeration = param.Number(25, bounds=(5, 50))
-    learning_rate = param.Number(200, bounds=(50, 400))
+    perplexity = param.Integer(50, bounds=(5, 75))
+    early_exaggeration = param.Integer(25, bounds=(5, 50))
+    learning_rate = param.Integer(200, bounds=(50, 400))
     variant = param.ObjectSelector(VARIANTS[0], objects=VARIANTS)
 
     def fit_transform(self, X):
