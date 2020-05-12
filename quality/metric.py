@@ -6,6 +6,8 @@ from joblib import Parallel, delayed
 # TODO right now the abstract class assumes that I want to compute chunked distances; should be more general.
 # TODO at some point I must stop trying new chunk sizes and just stick with what is working.
 # TODO multiple jobs only work without chunk search, for now 
+# TODO 'self' is being passed to every process, which could potentially be slow (due to transfer of
+#      data between parent and child). Try to improve on this?
 
 def _run_chunk(self, i, chunk_size, **kwargs):
     # print(f"_run_chunk: {i}, size: {chunk_size}")
@@ -27,7 +29,7 @@ class ChunkedMetric:
     def dataset_size(self):
         raise NotImplementedError("Must override 'dataset_size'")
     
-    def compute(self, chunk_size=None, chunk_search=True, n_jobs=1, **kwargs):
+    def compute(self, chunk_size=100, chunk_search=False, n_jobs=1, **kwargs):
         n = self.dataset_size()
         partial_results = []
 
@@ -72,8 +74,8 @@ class DistanceBasedMetric(ChunkedMetric):
 
     # TODO implement a cache here for the cases when the current chunk is shrinked
     def get_chunk(self, start, chunk_size):
-        D_h = cdist(self.X[start:start+chunk_size], self.X)
-        D_l = cdist(self.P[start:start+chunk_size], self.P)
+        D_h = cdist(self.X[start:start+chunk_size], self.X, metric="sqeuclidean")
+        D_l = cdist(self.P[start:start+chunk_size], self.P, metric="sqeuclidean")
         return D_h, D_l
 
     def dataset_size(self):
