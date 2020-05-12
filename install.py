@@ -18,6 +18,7 @@ def check_for_cuda():
 def pip_install(module_name):
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', module_name])
 
+
 if __name__ == '__main__':    
     dep = sys.argv[1]
 
@@ -26,6 +27,7 @@ if __name__ == '__main__':
         pip_install(f"ivis[{cpu_or_gpu}]")        
 
     if dep == 'umap':
+        pip_install('pynndescent')
         pip_install('umap-learn')
     
     else:
