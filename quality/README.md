@@ -22,3 +22,8 @@ print(tw)
 ```
 
 Each metric class is in its own file and has a `__main__` with a simple test, which you can also check for an usage example.
+
+## References
+
+* https://ieeexplore.ieee.org/document/8851280/
+* Code for quality metrics based on https://github.com/mespadoto/proj-quant-eval/
